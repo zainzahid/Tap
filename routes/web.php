@@ -22,3 +22,7 @@ Route::get('/', function () {
         'clients' => $clients
     ]);
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
