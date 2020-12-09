@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Models\TappTblClient;
+use App\Http\Controllers\SMS\SingleSmsController;
+use App\Http\Controllers\SMS\BulkSmsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,14 +17,21 @@ use App\Models\TappTblClient;
 |
 */
 
-Route::get('/', function () {
-    $clients = TappTblClient::all();
-    // dd($clients);
-    return view('welcome', [
-        'clients' => $clients
-    ]);
-});
+// Route::get('/', function () {
+//     $clients = TappTblClient::all();
+//     // dd($clients);
+//     return view('welcome', [
+//         'clients' => $clients
+//     ]);
+// });
 
 Auth::routes();
 
+Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/single-sms', [SingleSmsController::class, 'index'])->name('single-sms');
+Route::post('/single-sms', [SingleSmsController::class, 'sendSms']);
+
+Route::get('/bulk-sms', [BulkSmsController::class, 'index'])->name('bulk-sms');
+Route::post('/bulk-sms', [BulkSmsController::class, 'sendSms']);
