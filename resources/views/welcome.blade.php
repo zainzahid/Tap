@@ -85,7 +85,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    web allication
+                    web application
                 </div>
 
                 <div class="links">
