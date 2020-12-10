@@ -6,6 +6,7 @@ use App\Models\TappTblClient;
 use App\Http\Controllers\SMS\SingleSmsController;
 use App\Http\Controllers\SMS\BulkSmsController;
 use App\Http\Controllers\SMS\DeliverSmsController;
+use App\Http\Controllers\SMS\PendingSmsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::get('/single-sms', [SingleSmsController::class, 'index'])->name('single-s
 Route::post('/single-sms', [SingleSmsController::class, 'sendSms']);
 
 Route::get('/bulk-sms', [BulkSmsController::class, 'index'])->name('bulk-sms');
-Route::post('/bulk-sms', [BulkSmsController::class, 'sendSms']);
+Route::post('/bulk-sms', [BulkSmsController::class, 'store']);
 
 Route::get('/deliver-sms', [DeliverSmsController::class, 'index'])->name('deliver-sms');
+Route::get('/pending-sms', [PendingSmsController::class, 'index'])->name('pending-sms');

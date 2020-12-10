@@ -4,8 +4,10 @@ namespace App\Http\Controllers\SMS;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Twilio\Rest\Client;
 use Validator;
+use App\Models\TappSentMsg;
+use Excel;
+
 
 class BulkSMSController extends Controller
 {
@@ -14,16 +16,59 @@ class BulkSMSController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() 
+    public function index()
     {
         return view('bulksms');
     }
 
-    public function sendSms(Request $request) {
-        // Your Account SID and Auth Token from twilio.com/console
-       $sid    = env( 'TWILIO_SID' );
-       $token  = env( 'TWILIO_TOKEN' );
-       $client = new Client( $sid, $token );
+    public function store(Request $request) {
+
+       $validator = Validator::make($request->all(), [
+            'select_file'  => 'required|mimes:xls,xlsx',
+            'message' => 'required'
+       ]);
+
+       if ( $validator->passes() ) {
+
+        $message = $request->input( 'message' );
+
+        $path = $request->file('select_file')->getRealPath();
+
+        $count = 0;
+
+        $data = Excel::load($path)->get();
+
+        if($data->count() > 0)
+        {
+         foreach($data->toArray() as $key => $value)
+         {
+          foreach($value as $row)
+          {
+           $smsList[] = array(
+            'sms_number' => $row[0],
+            'twilio_num' => env( 'TWILIO_FROM' ),
+            'message' => $message,
+            'bulk_name' => '',
+            'date_time' => now()
+           );
+           $count++;
+          }
+         }
+
+         if(!empty($smsList))
+         {
+            TappSentMsg::insert($smsList);
+         }
+        }
+
+        return back()->with( 'success', $count . " messages will be sent!" );
+
+       } else {
+           return back()->withErrors( $validator );
+       }
+    }
+
+    public function storeWithInput(Request $request) {
 
        $validator = Validator::make($request->all(), [
            'numbers' => 'required',
@@ -37,23 +82,31 @@ class BulkSMSController extends Controller
            $message = $request->input( 'message' );
            $count = 0;
 
+           $smsList = [];
            foreach( $numbers_in_arrays as $number )
            {
                $count++;
 
-               $client->messages->create(
-                   $number,
-                   [
-                       'from' => env( 'TWILIO_FROM' ),
-                       'body' => $message,
-                   ]
-               );
+               array_push($smsList, [
+                'sms_number' => $number,
+                'twilio_num' => env( 'TWILIO_FROM' ),
+                'message' => $message,
+                'bulk_name' => '',
+                'date_time' => now()
+            ]);
            }
 
-           return back()->with( 'success', $count . " messages sent!" );
-              
+           TappSentMsg::insert($smsList);
+           return back()->with( 'success', $count . " messages will be sent!" );
+
        } else {
            return back()->withErrors( $validator );
        }
     }
 }
+
+
+/*
+excel import links:
+https://www.webslesson.info/2019/02/import-excel-file-in-laravel.html
+*/

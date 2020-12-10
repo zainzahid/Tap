@@ -4,10 +4,9 @@ namespace App\Http\Controllers\SMS;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\TappSentMsgLog;
+use App\Models\TappSentMsg;
 
-
-class DeliverSmsController extends Controller
+class PendingSmsController extends Controller
 {
     public function __construct()
     {
@@ -16,8 +15,8 @@ class DeliverSmsController extends Controller
 
     public function index()
     {
-        $deliveredMessages = TappSentMsgLog::all();
+        $pendingMessages = TappSentMsg::all();
 
-        return view('deliversms', ['deliveredMessages' => $deliveredMessages]);
+        return view('pendingsms', ['pendingMessages' => $pendingMessages]);
     }
 }

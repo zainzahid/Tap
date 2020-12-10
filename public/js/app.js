@@ -37274,6 +37274,12 @@ module.exports = function(module) {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+$(function () {
+  $('.datatable').DataTable(); // $('.datatable').css({'border-collapse':'collapse !important'});
+
+  $('.datatable').attr('style', 'border-collapse: collapse !important');
+});
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":

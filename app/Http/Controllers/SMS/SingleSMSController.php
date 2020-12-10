@@ -17,7 +17,7 @@ class SingleSMSController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() 
+    public function index()
     {
         return view('singlesms');
     }
@@ -44,11 +44,17 @@ class SingleSMSController extends Controller
                 'from' => env( 'TWILIO_FROM' ),
                 'body' => $message,
             ]);
-           $inputs = ['sms_number' => $number,'twilio_num' => env( 'TWILIO_FROM' ),'message' => $message];
+           $inputs = [
+                    'sms_number' => $number,
+                    'twilio_num' => env( 'TWILIO_FROM' ),
+                    'message' => $message,
+                    'bulk_name' => '',
+                    'date_time' => now()
+            ];
 
-           TappSentMsgLog::create($inputs);
+           TappSentMsgLog::insert($inputs);
            return back()->with( 'success', "Message sent successfully!" );
-              
+
        } else {
 
            return back()->withErrors( $validator );
