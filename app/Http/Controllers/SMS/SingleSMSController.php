@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
 use Validator;
+use App\Models\TappSentMsgLog;
+
 
 class SingleSMSController extends Controller
 {
@@ -42,11 +44,13 @@ class SingleSMSController extends Controller
                 'from' => env( 'TWILIO_FROM' ),
                 'body' => $message,
             ]);
-           $count = 0;
+           $inputs = ['sms_number' => $number,'twilio_num' => env( 'TWILIO_FROM' ),'message' => $message];
 
+           TappSentMsgLog::create($inputs);
            return back()->with( 'success', "Message sent successfully!" );
               
        } else {
+
            return back()->withErrors( $validator );
        }
     }

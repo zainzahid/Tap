@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\TappTblClient;
 use App\Http\Controllers\SMS\SingleSmsController;
 use App\Http\Controllers\SMS\BulkSmsController;
+use App\Http\Controllers\SMS\DeliverSmsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +36,5 @@ Route::post('/single-sms', [SingleSmsController::class, 'sendSms']);
 
 Route::get('/bulk-sms', [BulkSmsController::class, 'index'])->name('bulk-sms');
 Route::post('/bulk-sms', [BulkSmsController::class, 'sendSms']);
+
+Route::get('/deliver-sms', [DeliverSmsController::class, 'index'])->name('deliver-sms');
