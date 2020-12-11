@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="card-body">
-        <form action='' method='post'>
+        <form action='' method='post' enctype="multipart/form-data">
                 @csrf
                 @if($errors->any())
                     @foreach($errors->all() as $error)

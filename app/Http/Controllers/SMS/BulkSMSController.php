@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use App\Models\TappSentMsg;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\NumbersImport;
 
 
 class BulkSMSController extends Controller
@@ -29,44 +30,37 @@ class BulkSMSController extends Controller
        ]);
 
        if ( $validator->passes() ) {
+            $message = $request->input( 'message' );
 
-        $message = $request->input( 'message' );
+            $rows = Excel::toArray(new NumbersImport, request()->file('select_file'));
 
-        $path = $request->file('select_file')->getRealPath();
+            $count = 0;
 
-        $count = 0;
+            foreach($rows[0] as $row)
+            {
+                $smsList[] = array(
+                    'sms_number' => $row[0],
+                    'twilio_num' => env( 'TWILIO_FROM' ),
+                    'message' => $message,
+                    'bulk_name' => '',
+                    'date_time' => now()
+                );
+                $count++;
+            }
 
-        $data = Excel::load($path)->get();
+            if(!empty($smsList))
+            {
+                TappSentMsg::insert($smsList);
+            }
+            return back()->with( 'success', $count . " messages will be sent!" );
 
-        if($data->count() > 0)
-        {
-         foreach($data->toArray() as $key => $value)
-         {
-          foreach($value as $row)
-          {
-           $smsList[] = array(
-            'sms_number' => $row[0],
-            'twilio_num' => env( 'TWILIO_FROM' ),
-            'message' => $message,
-            'bulk_name' => '',
-            'date_time' => now()
-           );
-           $count++;
-          }
-         }
-
-         if(!empty($smsList))
-         {
-            TappSentMsg::insert($smsList);
-         }
+        }
+        else {
+            return back()->withErrors( $validator );
         }
 
-        return back()->with( 'success', $count . " messages will be sent!" );
-
-       } else {
-           return back()->withErrors( $validator );
-       }
     }
+
 
     public function storeWithInput(Request $request) {
 
@@ -109,4 +103,5 @@ class BulkSMSController extends Controller
 /*
 excel import links:
 https://www.webslesson.info/2019/02/import-excel-file-in-laravel.html
+https://docs.laravel-excel.com/3.1/imports
 */
