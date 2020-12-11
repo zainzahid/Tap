@@ -37274,9 +37274,10 @@ module.exports = function(module) {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
-$(function () {
-  $('.datatable').DataTable(); // $('.datatable').css({'border-collapse':'collapse !important'});
+__webpack_require__(/*! ./selectfile */ "./resources/js/selectfile.js");
 
+$(function () {
+  $('.datatable').DataTable();
   $('.datatable').attr('style', 'border-collapse: collapse !important');
 });
 
@@ -37324,6 +37325,25 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/selectfile.js":
+/*!************************************!*\
+  !*** ./resources/js/selectfile.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var input = document.getElementById('inputFile');
+var inputLabel = document.getElementById('inputFileLabel');
+input.addEventListener('change', showFileName);
+
+function showFileName(event) {
+  var input = event.srcElement;
+  var fileName = input.files[0].name;
+  inputLabel.textContent = 'File name: ' + fileName;
+}
 
 /***/ }),
 

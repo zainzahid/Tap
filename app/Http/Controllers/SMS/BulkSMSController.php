@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use App\Models\TappSentMsg;
+use App\Models\TappTwilioNumber;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\NumbersImport;
 
@@ -19,18 +20,27 @@ class BulkSMSController extends Controller
 
     public function index()
     {
-        return view('bulksms');
+        $numbersObjectCollection = TappTwilioNumber::all('number');
+
+        // Mapping Eloquent Collection containing Objects into the the simple collection with only numbers
+        $twilionumbers = $numbersObjectCollection->map(function ($val) {
+            return $val->number;
+        }) ;
+
+        return view('bulksms', ['twilionumbers' => $twilionumbers]);
     }
 
     public function store(Request $request) {
 
        $validator = Validator::make($request->all(), [
             'select_file'  => 'required|mimes:xls,xlsx',
-            'message' => 'required'
+            'message' => 'required',
+            'twilio_num' => 'required',
        ]);
 
        if ( $validator->passes() ) {
             $message = $request->input( 'message' );
+            $twilio_num = $request->input( 'twilio_num' );
 
             $rows = Excel::toArray(new NumbersImport, request()->file('select_file'));
 
@@ -40,7 +50,7 @@ class BulkSMSController extends Controller
             {
                 $smsList[] = array(
                     'sms_number' => $row[0],
-                    'twilio_num' => env( 'TWILIO_FROM' ),
+                    'twilio_num' => $twilio_num,
                     'message' => $message,
                     'bulk_name' => '',
                     'date_time' => now()

@@ -54,7 +54,7 @@ class SendSmsScheduled extends Command
                 $client->messages->create(
                     $messageToSend->sms_number,
                     [
-                        'from' => env( 'TWILIO_FROM' ),
+                        'from' => $messageToSend->twilio_num,
                         'body' => $messageToSend->message,
                     ]
                 );

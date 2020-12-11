@@ -28,9 +28,22 @@
                 <div class="form-group row">
                     <label class="col-md-4 col-form-label text-md-right">Excel File</label>
                     <div class="custom-file col-md-6">
-                        <input type="file" class="custom-file-input"  name="select_file" id="inputGroupFile01">
-                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <input type="file" class="custom-file-input"  name="select_file" id="inputFile">
+                        <label class="custom-file-label" for="inputGroupFile01" id="inputFileLabel">
+                            Choose file
+                        </label>
                       </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label text-md-right">Twilio number</label>
+                    <div class="col-md-6">
+                        <select class="form-control" name='twilio_num' id="exampleFormControlSelect1">
+                            @foreach ($twilionumbers as $number)
+                                <option value="{{$number}}">{{$number}}</option>
+                            @endforeach
+                          </select>
+                    </div>
                 </div>
 
                 <div class="form-group row">

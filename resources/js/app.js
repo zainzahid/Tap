@@ -1,4 +1,5 @@
 require('./bootstrap');
+require('./selectfile');
 
 $(function(){
     $('.datatable').DataTable();
