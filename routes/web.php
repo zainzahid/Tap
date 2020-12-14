@@ -7,6 +7,7 @@ use App\Http\Controllers\SMS\SingleSmsController;
 use App\Http\Controllers\SMS\BulkSmsController;
 use App\Http\Controllers\SMS\DeliverSmsController;
 use App\Http\Controllers\SMS\PendingSmsController;
+use App\Http\Controllers\SMS\RecieveSmsController;
 use App\Http\Controllers\TwilioNumberController;
 
 /*
@@ -41,6 +42,9 @@ Route::post('/bulk-sms', [BulkSmsController::class, 'store']);
 
 Route::get('/deliver-sms', [DeliverSmsController::class, 'index'])->name('deliver-sms');
 Route::get('/pending-sms', [PendingSmsController::class, 'index'])->name('pending-sms');
+
+Route::get('/recieve-sms', [RecieveSmsController::class, 'index'])->name('recieve-sms');;
+Route::post('/log-sms', [RecieveSmsController::class, 'logSms']);
 
 Route::get('/twilio-number', [TwilioNumberController::class, 'index'])->name('twilio-number');
 Route::post('/twilio-number', [TwilioNumberController::class, 'store']);
