@@ -9,6 +9,7 @@ use App\Http\Controllers\SMS\DeliverSmsController;
 use App\Http\Controllers\SMS\PendingSmsController;
 use App\Http\Controllers\SMS\RecieveSmsController;
 use App\Http\Controllers\TwilioNumberController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,3 +49,5 @@ Route::post('/log-sms', [RecieveSmsController::class, 'logSms']);
 
 Route::get('/twilio-number', [TwilioNumberController::class, 'index'])->name('twilio-number');
 Route::post('/twilio-number', [TwilioNumberController::class, 'store']);
+
+Route::resource('users', 'UserController');

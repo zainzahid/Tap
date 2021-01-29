@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class RecieveSmsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:send']);
+    }
+
     public function index()
     {
         $recievedMessages = TappMsgReceive::all();
