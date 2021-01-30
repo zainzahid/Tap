@@ -34,6 +34,11 @@
         {{ Form::email('email', null, array('class' => 'form-control')) }}
     </div>
 
+    <div class="form-group">
+        {{ Form::label('balance', 'Balance') }}
+        {{ Form::number('balance', null, array('class' => 'form-control')) }}
+    </div>
+
     <h5><b>Give Role</b></h5>
 
     <div class='form-group'>

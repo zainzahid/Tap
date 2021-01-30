@@ -9,7 +9,7 @@ use App\Models\TappSentMsg;
 use App\Models\TappTwilioNumber;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\NumbersImport;
-
+use Auth;
 
 class BulkSMSController extends Controller
 {
@@ -37,6 +37,9 @@ class BulkSMSController extends Controller
             'message' => 'required',
             'twilio_num' => 'required',
        ]);
+              
+       // Validation for checking user balance
+       $validator = $this->checkBalance($validator);
 
        if ( $validator->passes() ) {
             $message = $request->input( 'message' );
@@ -106,6 +109,16 @@ class BulkSMSController extends Controller
        } else {
            return back()->withErrors( $validator );
        }
+    }
+
+    function checkBalance($validator) {
+        return $validator->after(function($validator) {
+            if (Auth::user()->hasRole('user') && Auth::user()->balance < 1) {
+                // ['name' => 'The name is required']
+                $validator->errors()->add('balance', 'Not Enough Balance to Send SMS');;
+                return $validator;
+            }
+        });
     }
 }
 

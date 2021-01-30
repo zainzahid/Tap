@@ -8,6 +8,8 @@ use Twilio\Rest\Client;
 use Validator;
 use App\Models\TappSentMsgLog;
 use App\Models\TappTwilioNumber;
+use Illuminate\Http\RedirectResponse;
+use Auth;
 
 
 class SingleSMSController extends Controller
@@ -39,8 +41,11 @@ class SingleSMSController extends Controller
        $validator = Validator::make($request->all(), [
            'twilio_num' => 'required',
            'number' => 'required',
-           'message' => 'required'
+           'message' => 'required',
        ]);
+       
+       // Validation for checking user balance
+       $validator = $this->checkBalance($validator);
 
        if ( $validator->passes() ) {
 
@@ -66,8 +71,17 @@ class SingleSMSController extends Controller
            return back()->with( 'success', "Message sent successfully!" );
 
        } else {
-
            return back()->withErrors( $validator );
        }
+    }
+
+    function checkBalance($validator) {
+        return $validator->after(function($validator) {
+            if (Auth::user()->hasRole('user') && Auth::user()->balance < 1) {
+                // ['name' => 'The name is required']
+                $validator->errors()->add('balance', 'Not Enough Balance to Send SMS');;
+                return $validator;
+            }
+        });
     }
 }

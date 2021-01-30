@@ -32,6 +32,11 @@
         {{ Form::label('email', 'Email') }}
         {{ Form::email('email', '', array('class' => 'form-control')) }}
     </div>
+    
+    <div class="form-group">
+        {{ Form::label('balance', 'Balance') }}
+        {{ Form::number('balance', 5, array('class' => 'form-control')) }}
+    </div>
 
     <div class='form-group'>
         @foreach ($roles as $role)
