@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Models\TappTblClient;
-use App\Http\Controllers\SMS\SingleSmsController;
-use App\Http\Controllers\SMS\BulkSmsController;
+use App\Http\Controllers\SMS\SingleSMSController;
+use App\Http\Controllers\SMS\BulkSMSController;
 use App\Http\Controllers\SMS\DeliverSmsController;
 use App\Http\Controllers\SMS\PendingSmsController;
 use App\Http\Controllers\SMS\RecieveSmsController;
@@ -35,11 +35,11 @@ Auth::routes();
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/single-sms', [SingleSmsController::class, 'index'])->name('single-sms');
-Route::post('/single-sms', [SingleSmsController::class, 'sendSms']);
+Route::get('/single-sms', [SingleSMSController::class, 'index'])->name('single-sms');
+Route::post('/single-sms', [SingleSMSController::class, 'sendSms']);
 
-Route::get('/bulk-sms', [BulkSmsController::class, 'index'])->name('bulk-sms');
-Route::post('/bulk-sms', [BulkSmsController::class, 'store']);
+Route::get('/bulk-sms', [BulkSMSController::class, 'index'])->name('bulk-sms');
+Route::post('/bulk-sms', [BulkSMSController::class, 'store']);
 
 Route::get('/deliver-sms', [DeliverSmsController::class, 'index'])->name('deliver-sms');
 Route::get('/pending-sms', [PendingSmsController::class, 'index'])->name('pending-sms');

@@ -16,7 +16,7 @@ class RecieveSmsController extends Controller
     public function index()
     {
         $recievedMessages = TappMsgReceive::all();
-        return view('recievedSms',  ['recievedMessages' => $recievedMessages]);
+        return view('recievedsms',  ['recievedMessages' => $recievedMessages]);
     }
 
     public function logSms(Request $request)
