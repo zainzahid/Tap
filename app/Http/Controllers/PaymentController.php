@@ -64,8 +64,9 @@ class PaymentController extends Controller
         $response = $provider->getExpressCheckoutDetails($request->token);
   
         if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
+            session()->flash('message', 'Your payment of $'.$response['AMT'].' was successfull.');
+            return view('payment');
             dd($response);
-            dd('Your payment of $'.$response['AMT'].' was successfull. You can create success page here.');
         }
   
         dd('Something is wrong.');
