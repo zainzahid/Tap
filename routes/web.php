@@ -10,6 +10,7 @@ use App\Http\Controllers\SMS\PendingSmsController;
 use App\Http\Controllers\SMS\RecieveSmsController;
 use App\Http\Controllers\TwilioNumberController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,5 +50,12 @@ Route::post('/log-sms', [RecieveSmsController::class, 'logSms']);
 
 Route::get('/twilio-number', [TwilioNumberController::class, 'index'])->name('twilio-number');
 Route::post('/twilio-number', [TwilioNumberController::class, 'store']);
+
+Route::get('/buy', [PaymentController::class, 'index'])->name('buy');
+
+Route::get('payment/success', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('payment/{amount}', [PaymentController::class, 'payment'])->name('payment');
+Route::get('cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
+
 
 Route::resource('users', 'UserController');
