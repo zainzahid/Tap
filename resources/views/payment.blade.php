@@ -14,6 +14,8 @@
         </div>
     @endif
 
+    <h3 class="mb-2">Balance: {{Auth::user()->balance}}</h3>
+
     <a href="{{ route('payment', 10) }}" class="btn btn-success">Pay $10</a>
     <a href="{{ route('payment', 50) }}" class="btn btn-success">Pay $50</a>
     <a href="{{ route('payment', 100) }}" class="btn btn-success">Pay $100</a>

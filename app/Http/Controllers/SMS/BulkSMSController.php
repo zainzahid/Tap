@@ -13,6 +13,8 @@ use Auth;
 
 class BulkSMSController extends Controller
 {
+    private $count = 0;
+
     public function __construct()
     {
         $this->middleware(['permission:send']);
@@ -38,8 +40,6 @@ class BulkSMSController extends Controller
             'twilio_num' => 'required',
        ]);
               
-       // Validation for checking user balance
-       $validator = $this->checkBalance($validator);
 
        if ( $validator->passes() ) {
             $message = $request->input( 'message' );
@@ -47,7 +47,7 @@ class BulkSMSController extends Controller
 
             $rows = Excel::toArray(new NumbersImport, request()->file('select_file'));
 
-            $count = 0;
+            $this->count = 0;
 
             foreach($rows[0] as $row)
             {
@@ -58,14 +58,21 @@ class BulkSMSController extends Controller
                     'bulk_name' => '',
                     'date_time' => now()
                 );
-                $count++;
+                $this->count++;
             }
 
             if(!empty($smsList))
             {
+                // Validation for checking user balance
+                $validator = $this->checkBalance($validator);
+                if ( !$validator->passes() ) { return back()->withErrors( $validator ); }
+
                 TappSentMsg::insert($smsList);
+
+                // Deducting the balance on sms sent
+                Auth::user()->update(array('balance' => Auth::user()->balance - $this->count));
             }
-            return back()->with( 'success', $count . " messages will be sent!" );
+            return back()->with( 'success', $this->count . " messages will be sent!" );
 
         }
         else {
@@ -113,7 +120,7 @@ class BulkSMSController extends Controller
 
     function checkBalance($validator) {
         return $validator->after(function($validator) {
-            if (Auth::user()->hasRole('user') && Auth::user()->balance < 1) {
+            if (Auth::user()->hasRole('user') && Auth::user()->balance < $this->count) {
                 // ['name' => 'The name is required']
                 $validator->errors()->add('balance', 'Not Enough Balance to Send SMS');;
                 return $validator;

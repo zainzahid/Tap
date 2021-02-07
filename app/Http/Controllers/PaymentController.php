@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Srmklive\PayPal\Services\ExpressCheckout;
+use Auth;
 
 class PaymentController extends Controller
 {
+    public function __construct() {
+        $this->middleware(['role:user']);
+    }
+
     public function index() {
         return view('payment');
     }
@@ -64,8 +69,12 @@ class PaymentController extends Controller
         $response = $provider->getExpressCheckoutDetails($request->token);
   
         if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
+            // Updating the User balance according to purchase
+            Auth::user()->update(array('balance' => $response['AMT']));
+            
             session()->flash('message', 'Your payment of $'.$response['AMT'].' was successfull.');
             return view('payment');
+            
             dd($response);
         }
   

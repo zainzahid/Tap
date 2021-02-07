@@ -48,7 +48,6 @@ class SingleSMSController extends Controller
        $validator = $this->checkBalance($validator);
 
        if ( $validator->passes() ) {
-
            $message = $request->input( 'message' );
            $number = $request->input( 'number' );
            $twilio_num = $request->input( 'twilio_num' );
@@ -67,9 +66,13 @@ class SingleSMSController extends Controller
                     'date_time' => now()
             ];
 
-           TappSentMsgLog::insert($inputs);
-           return back()->with( 'success', "Message sent successfully!" );
+            // Saving the Sent Message in Logs Table
+            TappSentMsgLog::insert($inputs);
 
+            // Deducting the balance on sms sent
+            Auth::user()->update(array('balance' => Auth::user()->balance - 1));
+
+            return back()->with('success', "Message sent successfully!" );
        } else {
            return back()->withErrors( $validator );
        }

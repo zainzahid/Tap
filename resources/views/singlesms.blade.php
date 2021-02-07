@@ -46,7 +46,9 @@
                 <div class="form-group row mb-0">
                     <div class="col-md-8 offset-md-4">
                         <button class="btn btn-primary" type='submit'>Send!</button>
-                        <span class="ml-4">Balance: {{Auth::user()->balance}}</span>
+                        @role('user')
+                            <span class="ml-4">Balance: {{Auth::user()->balance}}</span>
+                        @endrole
                     </div>
                 </div>
 
