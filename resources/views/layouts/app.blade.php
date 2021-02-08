@@ -63,6 +63,10 @@
                             </li>
 
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('groups') }}">Groups</a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('deliver-sms') }}">Delivered SMS</a>
                             </li>
 

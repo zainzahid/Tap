@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Models\TappSentMsg;
 use App\Models\TappTwilioNumber;
+use App\Models\GroupNumbers;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\NumbersImport;
 use Auth;
@@ -14,6 +15,7 @@ use Auth;
 class BulkSMSController extends Controller
 {
     private $count = 0;
+    private $smsList = [];
 
     public function __construct()
     {
@@ -29,58 +31,93 @@ class BulkSMSController extends Controller
             return $val->number;
         }) ;
 
-        return view('bulksms', ['twilionumbers' => $twilionumbers]);
+        $groups= Auth::user()->groups;
+
+        return view('bulksms', ['twilionumbers' => $twilionumbers, 'groups' => $groups]);
     }
 
     public function store(Request $request) {
+        $is_file_attached =  !empty(request()->file('select_file'));
+        $is_group_selected =  !empty($request->input( 'group' ));
 
        $validator = Validator::make($request->all(), [
-            'select_file'  => 'required|mimes:xls,xlsx',
+            'select_file'  =>  $is_group_selected ? 'mimes:xls,xlsx': 'required|mimes:xls,xlsx',
+            'group'  =>  $is_file_attached? '': 'required',
             'message' => 'required',
             'twilio_num' => 'required',
-       ]);
-              
+       ]);   
 
        if ( $validator->passes() ) {
             $message = $request->input( 'message' );
             $twilio_num = $request->input( 'twilio_num' );
 
-            $rows = Excel::toArray(new NumbersImport, request()->file('select_file'));
-
-            $this->count = 0;
-
-            foreach($rows[0] as $row)
-            {
-                $smsList[] = array(
-                    'sms_number' => $row[0],
-                    'twilio_num' => $twilio_num,
-                    'message' => $message,
-                    'bulk_name' => '',
-                    'date_time' => now()
-                );
-                $this->count++;
+            if ($is_file_attached) {
+                $this->addImportedFileNumbersinList($twilio_num, $message);
+            }
+            if ($is_group_selected) {
+                $this->addSelectedGroupNumbersList( $twilio_num, $message, $request->input('group') );
             }
 
-            if(!empty($smsList))
+            if(!empty($this->smsList))
             {
                 // Validation for checking user balance
                 $validator = $this->checkBalance($validator);
                 if ( !$validator->passes() ) { return back()->withErrors( $validator ); }
 
-                TappSentMsg::insert($smsList);
+                TappSentMsg::insert($this->smsList);
 
                 // Deducting the balance on sms sent
                 Auth::user()->update(array('balance' => Auth::user()->balance - $this->count));
+            } else {
+                return back()->with( 'message', "Wrong format or empty file!" );
             }
-            return back()->with( 'success', $this->count . " messages will be sent!" );
-
+            return back()->with( 'message', $this->count . " messages will be sent!" );
         }
-        else {
-            return back()->withErrors( $validator );
-        }
-
+        return back()->withErrors( $validator );
     }
 
+    function addImportedFileNumbersinList ($twilio_num, $message) {
+        $rows = Excel::toArray(new NumbersImport, request()->file('select_file'));
+
+        foreach($rows[0] as $row)
+        {
+            if (empty($row[0])) { break; }
+
+            $this->smsList[] = array(
+                'sms_number' => $row[0],
+                'twilio_num' => $twilio_num,
+                'message' => $message,
+                'bulk_name' => '',
+                'date_time' => now()
+            );
+            $this->count++;
+        }
+    }
+
+    function addSelectedGroupNumbersList ($twilio_num, $message, $group_id) {
+        $group_numbers = GroupNumbers::where('group_id', $group_id)->get();
+        foreach($group_numbers as $row)
+        {
+            $this->smsList[] = array(
+                'sms_number' => floatval($row->sms_number),
+                'twilio_num' => $twilio_num,
+                'message' => $message,
+                'bulk_name' => '',
+                'date_time' => now()
+            );
+            $this->count++;
+        }
+    }
+
+    function checkBalance($validator) {
+        return $validator->after(function($validator) {
+            if (Auth::user()->hasRole('user') && Auth::user()->balance < $this->count) {
+                // ['name' => 'The name is required']
+                $validator->errors()->add('balance', 'Not Enough Balance to Send SMS');;
+                return $validator;
+            }
+        });
+    }
 
     public function storeWithInput(Request $request) {
 
@@ -111,22 +148,13 @@ class BulkSMSController extends Controller
            }
 
            TappSentMsg::insert($smsList);
-           return back()->with( 'success', $count . " messages will be sent!" );
+           return back()->with( 'message', $count . " messages will be sent!" );
 
        } else {
            return back()->withErrors( $validator );
        }
     }
 
-    function checkBalance($validator) {
-        return $validator->after(function($validator) {
-            if (Auth::user()->hasRole('user') && Auth::user()->balance < $this->count) {
-                // ['name' => 'The name is required']
-                $validator->errors()->add('balance', 'Not Enough Balance to Send SMS');;
-                return $validator;
-            }
-        });
-    }
 }
 
 

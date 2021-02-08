@@ -12,9 +12,9 @@
                     @endforeach
                 @endif
 
-                @if( session( 'success' ) )
+                @if( session( 'message' ) )
                     <div class="alert alert-primary" role="alert">
-                        {{ session( 'success' ) }}
+                        {{ session( 'message' ) }}
                     </div>
                 @endif
 
@@ -34,6 +34,18 @@
                         </label>
                       </div>
                 </div>  
+
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label text-md-right">Groups</label>
+                    <div class="col-md-6">
+                        <select class="form-control" name='group' id="exampleFormControlSelect1">
+                                <option value="">Select Group</option>
+                            @foreach ($groups as $group)
+                                <option value="{{$group->id}}">{{$group->group_name}}</option>
+                            @endforeach
+                          </select>
+                    </div>
+                </div>
 
                 <div class="form-group row">
                     <label class="col-md-4 col-form-label text-md-right">Twilio number</label>

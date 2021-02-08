@@ -2,15 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Models\TappTblClient;
 use App\Http\Controllers\SMS\SingleSMSController;
 use App\Http\Controllers\SMS\BulkSMSController;
 use App\Http\Controllers\SMS\DeliverSmsController;
 use App\Http\Controllers\SMS\PendingSmsController;
 use App\Http\Controllers\SMS\RecieveSmsController;
+
 use App\Http\Controllers\TwilioNumberController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\GroupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,14 +23,6 @@ use App\Http\Controllers\PaymentController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-// Route::get('/', function () {
-//     $clients = TappTblClient::all();
-//     // dd($clients);
-//     return view('welcome', [
-//         'clients' => $clients
-//     ]);
-// });
 
 Auth::routes();
 
@@ -57,5 +50,9 @@ Route::get('payment/success', [PaymentController::class, 'success'])->name('paym
 Route::get('payment/{amount}', [PaymentController::class, 'payment'])->name('payment');
 Route::get('cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
 
+Route::get('groups', [GroupController::class, 'index'])->name('groups');
+Route::delete('groups/destroy/{id}', [GroupController::class, 'destroy'])->name('groups.destroy');
+Route::get('groups/create', [GroupController::class, 'create'])->name('groups.create');
+Route::post('groups/create', [GroupController::class, 'store']);
 
 Route::resource('users', 'UserController');
