@@ -9,7 +9,7 @@ class TwilioNumberController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:send']);
+        $this->middleware(['role:admin']);
     }
 
     public function index() {

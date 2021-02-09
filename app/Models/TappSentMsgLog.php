@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 /**
  * Class TappSentMsgLog
@@ -44,6 +45,12 @@ class TappSentMsgLog extends Model
 		'images',
 		'bulk_name',
 		'scheduled_for',
-		'date_time'
+		'date_time',
+		'user_id'
 	];
+
+	public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

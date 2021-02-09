@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SMS;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TappSentMsg;
+use Auth;
 
 class PendingSmsController extends Controller
 {
@@ -15,7 +16,7 @@ class PendingSmsController extends Controller
 
     public function index()
     {
-        $pendingMessages = TappSentMsg::all();
+        $pendingMessages = Auth::user()->pendingMessages;
 
         return view('pendingsms', ['pendingMessages' => $pendingMessages]);
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SMS;
 use App\Http\Controllers\Controller;
 use App\Models\TappMsgReceive;
 use Illuminate\Http\Request;
+use Auth;
 
 class RecieveSmsController extends Controller
 {
@@ -15,7 +16,7 @@ class RecieveSmsController extends Controller
 
     public function index()
     {
-        $recievedMessages = TappMsgReceive::all();
+        $recievedMessages = Auth::user()->recievedMessages;
         return view('recievedsms',  ['recievedMessages' => $recievedMessages]);
     }
 
@@ -26,6 +27,7 @@ class RecieveSmsController extends Controller
             'body' => $request->input('Body'),
             'twilio_num' => $request->input('To'),
             'mediaUrl' => '',
+            'user_id' => Auth::user()->id,
             'date_time' => now()
         ];
         TappMsgReceive::insert($inputs);

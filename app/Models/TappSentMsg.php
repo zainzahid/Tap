@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 /**
  * Class TappSentMsg
@@ -42,6 +43,12 @@ class TappSentMsg extends Model
 		'images',
 		'bulk_name',
 		'date_time',
-		'scheduled_time'
+		'scheduled_time',
+		'user_id'
 	];
+
+	public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

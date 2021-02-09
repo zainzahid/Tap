@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\User;
 
 /**
  * Class TappMsgReceive
@@ -39,6 +40,12 @@ class TappMsgReceive extends Model
 		'read_status',
 		'mediaUrl',
 		'msg_read',
-		'twilio_num'
+		'twilio_num',
+		'user_id'
 	];
+
+	public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

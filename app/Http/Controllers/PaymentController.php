@@ -55,7 +55,9 @@ class PaymentController extends Controller
      */
     public function cancel()
     {
-        dd('Your payment is canceled. You can create cancel page here.');
+        return redirect()->route('buy')
+        ->with('message',
+         'Your payment was canceled for some reason on Checkout Page.');
     }
   
     /**
@@ -70,14 +72,14 @@ class PaymentController extends Controller
   
         if (in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
             // Updating the User balance according to purchase
-            Auth::user()->update(array('balance' => $response['AMT']));
-            
-            session()->flash('message', 'Your payment of $'.$response['AMT'].' was successfull.');
-            return view('payment');
-            
-            dd($response);
+            $newBalance = Auth::user()->balance + $response['AMT'];
+            Auth::user()->update(array('balance' => $newBalance));            
+            // session()->flash('message', 'Your payment of $'.$response['AMT'].' was successfull.');
+            // return view('payment');
+            return redirect()->route('buy')
+                ->with('message',
+                 'Your payment of $'.$response['AMT'].' was successfull.');
         }
-  
         dd('Something is wrong.');
     }
 }

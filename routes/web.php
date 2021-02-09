@@ -44,12 +44,17 @@ Route::post('/log-sms', [RecieveSmsController::class, 'logSms']);
 Route::get('/twilio-number', [TwilioNumberController::class, 'index'])->name('twilio-number');
 Route::post('/twilio-number', [TwilioNumberController::class, 'store']);
 
+/*_____________Payment Routes_________________ */
+// route to show main payment page 
 Route::get('/buy', [PaymentController::class, 'index'])->name('buy');
-
+// on successful redirect from paypal checkout
 Route::get('payment/success', [PaymentController::class, 'success'])->name('payment.success');
+// for sending checkout request to paypal
 Route::get('payment/{amount}', [PaymentController::class, 'payment'])->name('payment');
+// on cancelation redirect from paypal checkout
 Route::get('cancel', [PaymentController::class, 'cancel'])->name('payment.cancel');
 
+/*_____________Group Routes_________________ */
 Route::get('groups', [GroupController::class, 'index'])->name('groups');
 Route::delete('groups/destroy/{id}', [GroupController::class, 'destroy'])->name('groups.destroy');
 Route::get('groups/create', [GroupController::class, 'create'])->name('groups.create');

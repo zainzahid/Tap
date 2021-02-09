@@ -8,6 +8,10 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 
 use App\Models\Group;
+use App\Models\TappSentMsgLog;
+use App\Models\TappSentMsg;
+use App\Models\TappMsgReceive;
+use App\Models\TappSentMsgFailed;
 
 class User extends Authenticatable
 {
@@ -44,5 +48,21 @@ class User extends Authenticatable
     public function groups()
     {
         return $this->hasMany(Group::class, "user_id", "id");
+    }
+    public function sentMessages()
+    {
+        return $this->hasMany(TappSentMsgLog::class, "user_id", "id");
+    }
+    public function pendingMessages()
+    {
+        return $this->hasMany(TappSentMsg::class, "user_id", "id");
+    }
+    public function failedMessages()
+    {
+        return $this->hasMany(TappSentMsgFailed::class, "user_id", "id");
+    }
+    public function recievedMessages()
+    {
+        return $this->hasMany(TappMsgReceive::class, "user_id", "id");
     }
 }

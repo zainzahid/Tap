@@ -26,7 +26,7 @@
     <div id="app">
 
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{-- {{ config('app.name', 'SMS App') }} --}}
                     SMS App
@@ -90,11 +90,11 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('twilio-number') }}">
-                                        Twilio Numbers
-                                    </a>
-
                                     @role('admin')
+                                        <a class="dropdown-item" href="{{ route('twilio-number') }}">
+                                            Twilio Numbers
+                                        </a>
+                                   
                                         <a class="dropdown-item" href="{{ URL::to('users') }}">
                                             User Management
                                         </a>

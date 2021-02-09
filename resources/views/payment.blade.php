@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="container col-lg-6 col-lg-offset-1">
-    <h1><i class="fa fa-users"></i>Purchase Balance</h1>
+    <h1><i class="fa fa-credit-card" aria-hidden="true"></i> Purchase Balance</h1>
     <hr>
 
     @if( session( 'message' ) )

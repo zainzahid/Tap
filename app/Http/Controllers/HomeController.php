@@ -3,6 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
+use App\User;
+use App\Models\TappSentMsgLog;
+use App\Models\TappSentMsg;
+use App\Models\TappMsgReceive;
+
+
 
 class HomeController extends Controller
 {
@@ -22,7 +29,18 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        return view('home');
+    {        
+        $dbStats = [
+            'delivered_messages' => Auth::user()->sentMessages->count(),
+            'pending_messages' => Auth::user()->pendingMessages->count(),
+            'recieved_messages' => Auth::user()->recievedMessages->count()
+        ];
+        if (Auth::user()->hasRole('user')) {
+            $dbStats += ['balance' => Auth::user()->balance];
+        }
+        if (Auth::user()->hasRole('admin')) {
+            $dbStats += ['total_users' => User::role('user')->count()];
+        }
+        return view('home', ['dbStats' => $dbStats]);
     }
 }

@@ -63,6 +63,7 @@ class SingleSMSController extends Controller
                     'twilio_num' => $twilio_num,
                     'message' => $message,
                     'bulk_name' => '',
+                    'user_id' => Auth::user()->id,
                     'date_time' => now()
             ];
 

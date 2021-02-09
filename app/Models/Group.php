@@ -16,4 +16,9 @@ class Group extends Model
     {
         return $this->hasMany(GroupNumbers::class, "group_id", "id");
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
