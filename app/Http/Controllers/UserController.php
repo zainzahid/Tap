@@ -28,7 +28,7 @@ class UserController extends Controller {
     */
     public function index() {
     //Get all users and pass it to the view
-        $users = User::all()->except(Auth::id());
+        $users = User::orderBy('created_at','DESC')->get()->except(Auth::id());
         return view('users.index')->with('users', $users);
     }
 

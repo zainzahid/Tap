@@ -67,6 +67,15 @@
                                     {{ __('Register') }}
                                 </button>
                             </div>
+
+                            <div class="col-md-8 offset-md-4 mt-2">
+                                <div>
+                                    Already have one? 
+                                <a class="btn btn-link" style="margin-left: -0.5rem" href="{{ route('login') }}">
+                                    {{ __('Sign In Here') }}
+                                </a>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

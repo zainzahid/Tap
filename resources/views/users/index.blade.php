@@ -15,7 +15,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Date/Time Added</th>
+                    <th>Registered On</th>
                     <th>User Roles</th>
                     <th>Operations</th>
                 </tr>
