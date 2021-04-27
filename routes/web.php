@@ -24,7 +24,7 @@ use App\Http\Controllers\GroupController;
 |
 */
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');

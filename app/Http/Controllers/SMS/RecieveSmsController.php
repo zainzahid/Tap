@@ -20,6 +20,7 @@ class RecieveSmsController extends Controller
         return view('recievedsms',  ['recievedMessages' => $recievedMessages]);
     }
 
+    // Sms Recieve Webhook will call this
     public function logSms(Request $request)
     {
         $inputs = [

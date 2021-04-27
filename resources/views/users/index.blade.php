@@ -16,7 +16,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Registered On</th>
-                    <th>User Roles</th>
+                    <th>User Role</th>
                     <th>Operations</th>
                 </tr>
             </thead>

@@ -13,7 +13,7 @@ use App\Models\TappSentMsg;
 use App\Models\TappMsgReceive;
 use App\Models\TappSentMsgFailed;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasRoles;
     use Notifiable;
