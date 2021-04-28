@@ -55,11 +55,17 @@ class UserController extends Controller {
             'name'=>'required|max:120',
             'email'=>'required|email|unique:users',
             'balance'=>'required|min:0',
-            'password'=>'required|min:6|confirmed'
+            'password'=>'required|min:6|confirmed',
+            'phone_no'=>'required|min:1000|max:99999999999999|numeric',
+            'address'=>'required|min:5|max:1000'
+        ],
+        [
+            'phone_no.min'=>'The phone number must be at least 4 digits',
+            'phone_no.max'=>'The phone number may not be greater than 14',
         ]);
 
         $request['password'] =  Hash::make($request->password);
-        $user = User::create($request->only('email', 'name', 'password', 'balance')); //Retrieving only the email and password data
+        $user = User::create($request->only('email', 'name', 'password', 'balance', 'phone_no', 'address')); //Retrieving only the email and password data
 
         $roles = $request['roles']; //Retrieving the roles field
     //Checking if a role was selected
@@ -119,14 +125,20 @@ class UserController extends Controller {
             'name'=>'required|max:120',
             'email'=>'required|email',
             'balance'=>'required|min:0',
-            'password'=>'confirmed'
+            'password'=>'confirmed',
+            'phone_no'=>'required|min:1000|max:99999999999999|numeric',
+            'address'=>'required|min:5|max:1000'
+        ],
+        [
+            'phone_no.min'=>'The phone number must be at least 4 digits',
+            'phone_no.max'=>'The phone number may not be greater than 14',
         ]);
 
         if ($request->filled('password')) {
             $request['password'] =  Hash::make($request->password);
-            $input = $request->only(['name', 'email', 'password', 'balance']);//Retreive the name, email and password fields
+            $input = $request->only(['name', 'email', 'password', 'balance', 'phone_no', 'address']);//Retreive the name, email and password fields
         } else {
-            $input = $request->only(['name', 'email', 'balance']); //Retreive the name and email fields
+            $input = $request->only(['name', 'email', 'balance', 'phone_no', 'address']); //Retreive the name and email fields
         }
 
         $roles = $request['roles']; //Retreive all roles

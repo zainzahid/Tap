@@ -53,6 +53,12 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone_no'=>'required|min:1000|max:99999999999999|numeric',
+            'address'=>'required|min:5|max:1000'
+        ],
+        [
+            'phone_no.min'=>'The phone number must be at least 4 digits',
+            'phone_no.max'=>'The phone number may not be greater than 14',
         ]);
     }
 
@@ -67,6 +73,8 @@ class RegisterController extends Controller
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone_no' => $data['phone_no'],
+            'address' => $data['address'],
             'password' => Hash::make($data['password']),
         ]);
         $user->assignRole('user');

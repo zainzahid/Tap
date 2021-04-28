@@ -35,6 +35,16 @@
     </div>
 
     <div class="form-group">
+        {{ Form::label('phone_no', 'Phone No') }}
+        {{ Form::number('phone_no', null, array('class' => 'form-control')) }}
+    </div>
+
+    <div class="form-group">
+        {{ Form::label('address', 'Address') }}
+        {{ Form::textarea('address', null, array('class' => 'form-control','rows' => 3)) }}
+    </div>
+
+    <div class="form-group">
         {{ Form::label('balance', 'Balance') }}
         {{ Form::number('balance', null, array('class' => 'form-control')) }}
     </div>
