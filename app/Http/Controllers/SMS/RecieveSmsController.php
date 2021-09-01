@@ -32,6 +32,13 @@ class RecieveSmsController extends Controller
             'date_time' => now()
         ];
         TappMsgReceive::insert($inputs);
+
+        // Deducting the User balance on Message recieve
+        // if( Auth::user()->balance > 0 ) {
+        //     $newBalance = Auth::user()->balance - 1;
+        //     Auth::user()->update(array('balance' => $newBalance)); 
+        // }
+        
         return;
     }
 }

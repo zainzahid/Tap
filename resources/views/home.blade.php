@@ -93,4 +93,143 @@
         </div>
     </div>
 </div>
+
+<div class="container">
+  <br><br>
+
+  <div class="row justify-content-center">
+    <div class="col-md-9" style="display: flex;justify-content: flex-end">
+      <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Month') }}</label>
+      <input style="width: 20%" id="name" type="month" class="form-control name="name" autofocus>
+    </div>
+  </div>
+
+  <canvas id="myChart" style="text-align: center; margin: auto" width="900" height="400"></canvas>
+
+  <br><br>
+
+  <div class="row justify-content-center">
+    <div class="col-md-9">
+      <table class="table table-striped table-bordered datatable table-responsive-sm" id="dataTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Sent Messages</th>
+            <th>Recieved Messages</th>
+            <th>Pending Messages</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+            @foreach($user_data as $key => $data)
+                <tr id="tr" class="tr{{$key}}">
+                    <td> {{$key+1}}</td>
+                    <td>{{$data['sent_messages']}}</td>
+                    <td>{{$data['received_messages']}}</td>
+                    <td>{{$data['pending_messages']}}</td>
+                    <td>{{$data['Date']}}</td>
+                </tr>
+            @endforeach
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ______________Chart.JS ____________________-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js" integrity="sha512-VMsZqo0ar06BMtg0tPsdgRADvl0kDHpTbugCBBrL55KmucH6hP9zWdLIWY//OTfMnzz6xWQRxQqsUFefwHuHyg==" crossorigin="anonymous"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> --}}
+<script>
+     let userData = @php echo $userData; @endphp;
+     console.log('userData', userData);
+
+     let dateLabels=[];
+     let recievedDataset = [];
+     let sentDataset = [];
+     let pendingDataset = [];
+
+     userData.forEach(data => {
+       dateLabels.push(data.Date);
+       recievedDataset.push(data.received_messages);
+       sentDataset.push(data.sent_messages);
+       pendingDataset.push(data.pending_messages);
+     });
+     console.log('dateLabels', dateLabels)
+     console.log('recievedDataset', recievedDataset)
+     console.log('sentDataset', sentDataset)
+     console.log('pendingDataset', pendingDataset)
+
+     var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: dateLabels,
+        datasets: [{
+          label: 'Recieved',
+          data: recievedDataset,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)'
+          ],
+          // borderColor: [
+          //   'rgba(255,99,132,1)'
+          // ],
+          // borderWidth: 1
+        },{
+          label: 'Sent',
+          data: sentDataset,
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.2)'
+          ],
+          // borderColor: [
+          //   'rgba(54, 162, 235, 1)'
+          // ],
+          // borderWidth: 1
+        }, {
+          label: 'Pending',
+          data: pendingDataset,
+          backgroundColor: [
+            'rgba(255, 206, 86, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 206, 86, 1)'
+
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          xAxes: [{
+            ticks: {
+              maxRotation: 90,
+              minRotation: 80
+            },
+            gridLines: {
+              offsetGridLines: true // à rajouter
+            }
+          },
+          {
+            position: "top",
+            ticks: {
+              maxRotation: 90,
+              minRotation: 80
+            },
+            gridLines: {
+              offsetGridLines: true // et matcher pareil ici
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+</script>
+
+
+
 @endsection
