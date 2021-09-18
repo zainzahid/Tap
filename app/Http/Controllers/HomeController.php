@@ -68,37 +68,36 @@ class HomeController extends Controller
         $unique_dates = array_unique($all_dates); 
         
         $new_array = [];
-
-        $default_item = array(
+        
+        foreach($unique_dates as $i=>$value)  {
+            array_push($new_array,array(
             'received_messages' => 0,
             'pending_messages' => 0,
             'sent_messages' => 0,
-        );
-        
-        for($i=0 ; $i< count($unique_dates) ; $i++) {
-            array_push($new_array,$default_item);
-            $new_array[$i] += ['Date' => $unique_dates[$i]];
+            'Date' => $unique_dates[$i],
+            ));
             
-            for($j=0 ; $j< count($combine_result) ; $j++) {
-                
-                if($combine_result[$j]->Date == $unique_dates[$i]) {
-                    if (property_exists($combine_result[$j], 'received_messages') && isset($combine_result[$j]->received_messages)) {
-                        $new_array[$i]['received_messages'] += $combine_result[$j]->received_messages;
+            if(array_key_exists($i, $new_array))  {
+                foreach($combine_result as $j=>$val) {
+                    
+                    if($combine_result[$j]->Date == $unique_dates[$i]) {
+                        if (property_exists($combine_result[$j], 'received_messages') && isset($combine_result[$j]->received_messages)) {
+                            $new_array[$i]['received_messages'] += $combine_result[$j]->received_messages;
+                        }
+    
+                        if (property_exists($combine_result[$j], 'pending_messages') && isset($combine_result[$j]->pending_messages)) {
+                            $new_array[$i]['pending_messages'] += $combine_result[$j]->pending_messages;
+                        }
+    
+                        if (property_exists($combine_result[$j], 'sent_messages') && isset($combine_result[$j]->sent_messages)) {
+                            $new_array[$i]['sent_messages'] += $combine_result[$j]->sent_messages;
+                        }
+    
                     }
-
-                    if (property_exists($combine_result[$j], 'pending_messages') && isset($combine_result[$j]->pending_messages)) {
-                        $new_array[$i]['pending_messages'] += $combine_result[$j]->pending_messages;
-                    }
-
-                    if (property_exists($combine_result[$j], 'sent_messages') && isset($combine_result[$j]->sent_messages)) {
-                        $new_array[$i]['sent_messages'] += $combine_result[$j]->sent_messages;
-                    }
-
                 }
             }
         }
 
-        //dd($new_array);
         return $new_array;
     }
     
